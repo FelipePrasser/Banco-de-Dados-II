@@ -1,0 +1,189 @@
+Transações no MYSQL
+-------------------
+
+i) Observe as sequêncisa de comandos a seguir
+ii) Responda à pergunta apresentada da melhor forma que puder
+iii) Execute os comandos que se encontram ao final deste arquivo
+iv) Confira sua resposta.
+
+1) excluir registro de forma transacional. Quantos registros restam na tabela após a execução de todos os comandos?
+
+a) iniciar uma transação
+start transaction;
+
+b) apagar todos os registros de uma tabela
+delete * from XXX;
+
+c) contar os registros da tabela
+select count(*) from XXX;
+
+d) fazer o roolback
+rollback;
+
+e) contar novamente os registros da tabela
+select count(*) from XXX;
+
+referência:
+https://www.mysqltutorial.org/mysql-transaction.aspx
+
+2) repita a sequência 1, executando o select count(*) em OUTRO TERMINAL após executar o passo c) 
+
+3) inserir registro de forma transacional com uso . Quantos registros restam na tabela após a execução de todos os comandos?
+
+a) desligar a execução automática de confirmação
+set autocommit = 0
+
+b) iniciar uma transação
+start transaction
+
+c) contar os registros da tabela
+select count(*) from XXX;
+
+d) inserir um registro
+insert into tabela values (aaa, bbb, ccc)
+
+e) contar novamente os registros da tabela
+select count(*) from XXX;
+
+f) fazer o roolback
+rollback;
+
+g) contar novamente os registros da tabela
+select count(*) from XXX;
+
+h) retornar ao valor padrão a execução automática de confirmação
+set autocommit = 1
+
+i) visualizar o status da variável autocommit
+show variables like 'autocommit'
+
+4) repita a sequência 3 sem executar os comandos que afetam o autocommit. Qual é a quantidade final de registros após a execução de todos os comandos?
+
+5) usar rollback parcial. Quantos registros serão afetados após a execução de todos os comandos?
+
+a) iniciar uma transação
+start transaction
+
+b) contar os registros da tabela
+select count(*) from XXX;
+
+c) remover um registro
+delete from tabela where campo=valor
+
+d) contar os registros da tabela
+select count(*) from XXX;
+
+e) salvar um ponto de execução de transação
+savepoint salvou1
+
+f) remover outro registro
+delete from tabela where campo=valor2
+
+g) contar os registros da tabela
+select count(*) from XXX;
+
+h) fazer um rollback até o ponto de execução "salvou1"
+rollback to savepoint salvou1
+
+i) contar os registros da tabela
+select count(*) from XXX;
+
+j) salvar um ponto de execução de transação
+savepoint salvou2
+
+k) remover outro registro
+delete from tabela where campo=valor3
+
+l) contar os registros da tabela
+select count(*) from XXX;
+
+m) remover o ponto de execução anteriormente salvo
+release savepoint salvou2
+
+n) contar os registros da tabela
+select count(*) from XXX;
+
+o) fazer o roolback
+rollback;
+
+p) contar os registros da tabela
+select count(*) from XXX;
+
+referência:
+https://www.javatpoint.com/mysql-transaction
+
+6) fazer uma totalização transacional. Qual é o comportamento esperado após a execução do comando do item c) ?
+
+a) bloquear a tabela para leitura
+lock tables XXX, read
+
+b) executar um comando de agregação
+select count(*) from XXX
+
+c) EM OUTRO TERMINAL, inserir um registro na tabela XXX
+inserto into XXX values (...)
+
+d) liberar o bloqueio
+unlock tables;
+
+e) executar um comando de agregação
+select count(*) from XXX
+
+f) remover o registro excluído
+delete from xxx where aaa=bbb
+    
+7) fazer um bloqueio de linha, para escrita. Qual é o comportamento esperado após a execução do comando do item c) ?
+
+a) iniciar uma transação
+start transaction
+
+b) bloquear um certo registro para atualização
+select aaa from bbb where campo = valor for update
+
+c) EM OUTRO TERMINAL (II), inserir um registro de forma de campo = valor2 (sem conflito)
+insert into aaa values (..., ..., campo=valor)
+
+d) NOVAMENTE NO OUTRO TERMINAL (II), inserir um registro com conflito (campo = valor)
+
+e) RETORNANDO AO PRIMEIRO TERMINAL, liberar o bloqueio
+rollback
+
+f) contar os registros da tabela
+select count(*) from XXX;
+
+g) remover os registros que foram inseridos
+delete from aaa where campo=valor2
+delete from aaa where campo=valor
+
+h) contar os registros da tabela
+select count(*) from XXX;
+
+referência:
+https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html
+
+8) fazer outro bloqueio de linha, para leitura. Qual é o comportamento esperado após a execução do comando do item c) ?
+
+a) iniciar uma transação
+start transaction
+
+b) bloquear um certo registro para leitura
+select aaa from bbb where campo = valor for share
+
+c) EM OUTRO TERMINAL, tentar atualizar linhas com a restrição especificada
+update aaa set xxx=yyy where campo=valor
+
+d) NO PRIMEIRO TERMINAL, liberar o bloqueio
+rollback
+
+e) selecionar novamente o registro inicial
+select aaa from bbb where campo = valor
+
+f) desfazer a alteração
+update aaa set xxx=valor where campo=yyy
+
+referência:
+https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html
+
+9) verifique os comandos que incorrem em auto-commit (note o create table):
+
+https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html
