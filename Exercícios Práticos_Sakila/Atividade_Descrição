@@ -12,7 +12,7 @@ a) iniciar uma transação
 start transaction;
 
 b) apagar todos os registros de uma tabela
-delete * from XXX;
+delete from XXX;
 
 c) contar os registros da tabela
 select count(*) from XXX;
@@ -187,3 +187,4 @@ https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html
 9) verifique os comandos que incorrem em auto-commit (note o create table):
 
 https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html
+
