@@ -1,0 +1,45 @@
+ALTER TABLE Carro ADD v int
+
+use av3c
+
+create view carroView as
+
+-- select tudo dos carros
+-- onde(where) modelo e versão estiver dentro
+-- dos resultados da consulta de baixo
+select * from Carro c 
+where (modelo, v) IN (select modelo,max(v) as Recente from Carro c
+group by modelo)
+
+
+select modelo,max(v) as Recente from Carro c
+group by modelo
+
+criar gatilho 
+update Carro 
+set 
+
+delimiter //
+CREATE TRIGGER inserir BEFORE insert on Carro
+-- impedir que o usuario adicione ou modifique a versão
+-- 
+select modelo as m, ano_fabricacao as af from Carro as c
+if m=new.modelo and af=new.ano_fabricacao
+
+end //
+
+
+
+select * from carroView cv 
+
+select * from Carr
+
+Pessoa (cpf, nome, email, telefone) order by v desc limit 1;
+
+alter view carroView as 
+select * from Carro c 
+where (modelo, v) IN (select modelo,max(v) as Recente from Carro c
+group by modelo)
+
+select * from carroView cv 
+
