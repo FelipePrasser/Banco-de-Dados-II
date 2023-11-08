@@ -1,0 +1,26 @@
+-- av3c.carroView source
+
+CREATE OR REPLACE
+ALGORITHM = UNDEFINED VIEW `av3c`.`carroView` AS
+select
+    `c`.`marca` AS `marca`,
+    `c`.`modelo` AS `modelo`,
+    `c`.`ano_fabricacao` AS `ano_fabricacao`,
+    `c`.`ano_modelo` AS `ano_modelo`,
+    `c`.`litragem` AS `litragem`,
+    `c`.`cambio` AS `cambio`,
+    `c`.`km` AS `km`,
+    `c`.`combustivel` AS `combustivel`,
+    `c`.`cor` AS `cor`
+from
+    `av3c`.`Carro` `c`
+where
+    (`c`.`modelo`,
+    `c`.`v`) in (
+    select
+        `c`.`modelo`,
+        max(`c`.`v`) AS `Recente`
+    from
+        `av3c`.`Carro` `c`
+    group by
+        `c`.`modelo`);
